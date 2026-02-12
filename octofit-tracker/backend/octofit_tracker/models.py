@@ -27,7 +27,15 @@ class Activity(models.Model):
     date = models.DateField()
 
     def __str__(self):
-        return f"{self.user.name} - {self.type}"
+        from .models import User
+        try:
+            user = self.user
+            user_name = user.name
+        except User.DoesNotExist:
+            user_name = 'Unknown User'
+        except AttributeError:
+            user_name = str(self.user) if self.user else 'Unknown User'
+        return f"{user_name} - {self.type}"
 
 class Workout(models.Model):
     id = models.ObjectIdField(primary_key=True, default=ObjectId, editable=False)
